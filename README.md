@@ -1,24 +1,51 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+There is a problem with the polyfill we use to test fetch invocations. So, we have to replace it.
 
-Things you may want to cover:
+## Fix
 
-* Ruby version
+### Add Dependencies 
 
-* System dependencies
+```bash
+yarn add fetch-mock@5 babel-plugin-transform-runtime fetch-ponyfill --dev
+```
 
-* Configuration
+### Modify Karma config file
 
-* Database creation
+In `karma.conf.js`, delete the line:
 
-* Database initialization
+```
+  exclude: /node_modules/,
+```
 
-* How to run the test suite
+### Modify the Test Helper
 
-* Services (job queues, cache servers, search engines, etc.)
+In `spec/javascript/testHelper.js`, modify the top so that it resembles:
 
-* Deployment instructions
+```javascript
+import { shallow, mount } from 'enzyme';
+import jasmineEnzyme from 'jasmine-enzyme';
+import React from 'react';
+import 'jasmine-ajax';
+import fetchPonyfill from 'fetch-ponyfill';
+const {fetch, Request, Response, Headers} = fetchPonyfill({});
 
-* ...
+Object.assign(global, {
+  jasmineEnzyme,
+  mount,
+  React,
+  shallow,
+  fetch,
+  Request,
+  Response,
+  Headers
+});
+```
+
+### Import fetchMock
+
+In your tests where you must make use of `fetchMock`, import it.
+
+```javascript
+import fetchMock from 'fetch-mock'
+```
