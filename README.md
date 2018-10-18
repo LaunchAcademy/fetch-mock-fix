@@ -2,7 +2,9 @@
 
 There is a problem with the polyfill we use to test fetch invocations. So, we have to replace it.
 
-## Fix
+A diff of properly configuring fetch-mock [is available]( https://github.com/LaunchAcademy/fetch-mock-fix/pull/1/files)
+
+## Fix Details
 
 ### Add Dependencies 
 
